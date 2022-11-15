@@ -1,17 +1,10 @@
-import React from 'react';
-import { VERSION } from '@twilio/flex-ui';
-import { FlexPlugin } from 'flex-plugin';
+import { FlexPlugin } from "@twilio/flex-plugin";
+import VerifyTab from "./components/VerifyTab";
+import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
+import { CustomizationProvider } from "@twilio-paste/core/customization";
+import { Tab } from "@twilio/flex-ui";
 
-import {
-  VerifyButtonContainer,
-  VerifyBannerContainer,
-  TokenFormContainer,
-  ErrorMessageContainer,
-  AuthenticatedInfoContainer,
-} from './components/Verify/Verify.Container';
-import reducers, { namespace } from './states';
-
-const PLUGIN_NAME = 'VerifyPlugin';
+const PLUGIN_NAME = "VerifyPlugin";
 
 export default class VerifyPlugin extends FlexPlugin {
   constructor() {
@@ -26,57 +19,21 @@ export default class VerifyPlugin extends FlexPlugin {
    * @param manager { import('@twilio/flex-ui').Manager }
    */
   init(flex, manager) {
-    this.registerReducers(manager);
+    // Add Paste
+    flex.setProviders({
+      PasteThemeProvider: CustomizationProvider,
+    });
 
-    flex.TaskCanvas
-      .Content
-      .add(
-        <VerifyButtonContainer key="verify-button" />,
-        { sortOrder: 0 }
-      );
-
-    flex.TaskCanvas
-      .Content
-      .add(
-        <VerifyBannerContainer key="verify-banner" />,
-        { sortOrder: -1 }
-      );
-
-    flex.TaskCanvas
-      .Content
-      .add(
-        <ErrorMessageContainer key="error-message" />,
-        { sortOrder: -1 }
-      )
-    
-    flex.TaskCanvas
-      .Content
-      .add(
-        <TokenFormContainer key="token-form" />,
-        { sortOrder: 0 }
-      );
-
-    // Remove caller information until they are verifiied
-    flex.TaskCanvasTabs.Content.remove("info");
-
-    // Show caller information when they are verified
     flex.TaskCanvasTabs.Content.add(
-      <AuthenticatedInfoContainer label="info" key="auth-info"/>
+      <Tab
+        icon="<VerifiedUserIcon />"
+        iconActive={<VerifiedUserIcon />}
+        uniqueName="verify-customer"
+        key="verify-customer"
+        label="Verify"
+      >
+        <VerifyTab />
+      </Tab>
     );
-  }
-
-  /**
-   * Registers the plugin reducers
-   *
-   * @param manager { Flex.Manager }
-   */
-  registerReducers(manager) {
-    if (!manager.store.addReducer) {
-      // eslint: disable-next-line
-      console.error(`You need FlexUI > 1.9.0 to use built-in redux; you are currently on ${VERSION}`);
-      return;
-    }
-
-    manager.store.addReducer(namespace, reducers);
   }
 }

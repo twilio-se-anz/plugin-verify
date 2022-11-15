@@ -1,4 +1,4 @@
-import * as FlexPlugin from 'flex-plugin';
-import VerifyPlugin from './VerifyPlugin';
+import * as FlexPlugin from "@twilio/flex-plugin";
+import VerifyPlugin from "./VerifyPlugin";
 
 FlexPlugin.loadPlugin(VerifyPlugin);

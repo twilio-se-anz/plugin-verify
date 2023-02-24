@@ -70,9 +70,11 @@ const getVerifyAddress = (channel, task) => {
     case "web":
       return task.attributes.email;
     case "voice":
-      return task.attributes.caller;
+      return task.attributes.caller || task.attributes.phone;
+    case "call":
+      return task.attributes.caller || task.attributes.phone;
     case "sms":
-      return task.attributes.caller;
+      return task.attributes.caller || task.attributes.phone;
     default:
       return null;
   }

@@ -19,57 +19,62 @@
  *  }
  */
 
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
-  response.appendHeader('Content-Type', 'application/json');
-  
-  // uncomment to support CORS
-  response.appendHeader('Access-Control-Allow-Origin', '*');
-  response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  response.appendHeader("Content-Type", "application/json");
 
-  if (typeof event.to === 'undefined') {
+  // uncomment to support CORS
+  response.appendHeader("Access-Control-Allow-Origin", "*");
+  response.appendHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  response.appendHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (typeof event.to === "undefined") {
     response.setBody({
-      "success": false,
-      "error": {
-        "message": "Missing parameter; please provide a phone number or email.",
-        "moreInfo": "https://www.twilio.com/docs/verify/api/verification"
-      }
-    })
+      success: false,
+      error: {
+        message: "Missing parameter; please provide a phone number or email.",
+        moreInfo: "https://www.twilio.com/docs/verify/api/verification",
+      },
+    });
     response.setStatusCode(400);
     return callback(null, response);
   }
 
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
-  const to = event.to;
-  const channel = (typeof event.channel === 'undefined') ? "sms" : event.channel;
-  const locale = (typeof event.locale === 'undefined') ? "en" : event.locale;
 
-  client.verify.services(service)
-    .verifications
-    .create({
+  const channel = typeof event.channel === "undefined" ? "sms" : event.channel;
+  const locale = typeof event.locale === "undefined" ? "en" : event.locale;
+  let to = event.to;
+
+  if (to.startsWith("0")) {
+    to = "+61" + to.substring(1, to.length);
+  }
+
+  client.verify
+    .services(service)
+    .verifications.create({
       to: to,
       channel: channel,
-      locale: locale
+      locale: locale,
     })
-    .then(verification => {
+    .then((verification) => {
       console.log(`Sent verification: '${verification.sid}'`);
       response.setStatusCode(200);
       response.setBody({
-        "success": true
+        success: true,
       });
       callback(null, response);
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
       response.setStatusCode(error.status);
       response.setBody({
-        "success": false,
-        "error": {
-          "message": error.message,
-          "moreInfo": error.moreInfo
-        }
+        success: false,
+        error: {
+          message: error.message,
+          moreInfo: error.moreInfo,
+        },
       });
       callback(null, response);
     });

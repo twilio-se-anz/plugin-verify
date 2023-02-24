@@ -1,6 +1,6 @@
 {
   "name": "plugin-verify",
-  "version": "2.0.4",
+  "version": "2.0.6",
   "private": true,
   "author": {
     "name": "Kelley Robinson",
@@ -12,17 +12,18 @@
   },
   "dependencies": {
     "@emotion-icons/fa-solid": "^2.15.0",
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
+    "@emotion/react": "^11.1.5",
+    "@emotion/styled": "^11.1.5",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@twilio-paste/core": "^16.0.1",
     "@twilio-paste/icons": "^9.3.0",
-    "@twilio/flex-plugin-scripts": "^5.2.0",
     "prop-types": "^15.7.2",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "@twilio/flex-plugin-scripts": "6.0.4"
   },
   "devDependencies": {
-    "@twilio/flex-ui": "2.0.0-beta.3"
+    "@twilio/flex-ui": "2.1.0",
+    "react-test-renderer": "17.0.2"
   }
 }
